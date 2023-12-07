@@ -4,15 +4,14 @@ import { useRouter } from "next/router";
 const LamarJobPage: React.FC = () => {
   const [priceOnBid, setPriceOnBid] = useState("");
   const router = useRouter();
-  const { id: jobId } = router.query; // Extracting job ID from the URL
+  const { id: jobId } = router.query; 
 
   const submitBid = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const token = localStorage.getItem("token");
-    const talentID = localStorage.getItem("userId"); // Replace 'userId' with the correct localStorage key for the talent ID
+    const talentID = localStorage.getItem("userId"); 
 
-    // Check if the token and talentID are available
     if (!token || !talentID) {
       alert("You must be logged in to submit a bid.");
       return;
@@ -24,7 +23,7 @@ const LamarJobPage: React.FC = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Ensure this is what your API expects
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
@@ -38,10 +37,8 @@ const LamarJobPage: React.FC = () => {
         throw new Error("Failed to submit bid");
       }
 
-      const result = await response.json();
-      console.log(result);
-      alert("Bid submitted successfully!");
-      // Additional handling such as redirecting the user or updating the UI
+ 
+      router.push(`/job-detail/${jobId}`);
     } catch (error) {
       console.error("Error submitting bid:", error);
       alert("Error submitting bid. Please try again.");
