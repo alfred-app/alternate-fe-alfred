@@ -1,7 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
-// Definisikan interface untuk data Job
+import RoleButton from "../../../components/RoleButton"; 
+
 interface Job {
   id: string;
   clientID: string;
@@ -11,13 +12,17 @@ interface Job {
   imageURL: string;
 }
 
-const JobDetailPage = () => {
+const JobDetailPage: React.FC = () => {
   const [job, setJob] = useState<Job | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [role, setRole] = useState<string | null>(null);
   const router = useRouter();
   const { id } = router.query;
 
   useEffect(() => {
+    const userRole = localStorage.getItem("role");
+    setRole(userRole);
+
     const fetchJobDetail = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -44,7 +49,7 @@ const JobDetailPage = () => {
         setJob(data);
       } catch (error) {
         console.error("Error:", error);
-        // Handle error
+  
       }
       setIsLoading(false);
     };
@@ -68,10 +73,10 @@ const JobDetailPage = () => {
       <p>{job.descriptions}</p>
       <p>Address: {job.address}</p>
       <p>Client ID: {job.clientID}</p>
-      {/* ini untuk image */}
       {/* {job.imageURL && (
         <Image src={job.imageURL} alt={job.name} width={500} height={300} />
       )} */}
+      {role && <RoleButton role={role} jobId={job.id} />}
     </div>
   );
 };
