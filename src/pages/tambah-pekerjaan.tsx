@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const TambahPekerjaanPage = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    descriptions: "",
-    address: "",
-    imageURL: "",
+    name: '',
+    descriptions: '',
+    address: '',
+    imageURL: '',
   });
   const router = useRouter();
 
@@ -16,11 +16,11 @@ const TambahPekerjaanPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token"); 
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
 
     if (!userId || !token) {
-      alert("User ID or token is not available. Please login.");
+      alert('User ID or token is not available. Please login.');
       return;
     }
 
@@ -28,30 +28,26 @@ const TambahPekerjaanPage = () => {
       const response = await fetch(
         `https://alfred-server.up.railway.app/job/create-job/${userId}`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       if (response.ok) {
-   
-        router.push("/dashboard");
+        router.push('/dashboard');
       } else {
-    
         const errorData = await response.json();
-        alert(errorData.message || "Failed to create job");
+        alert(errorData.message || 'Failed to create job');
       }
     } catch (error) {
       if (error instanceof Error) {
-     
         alert(error.message);
       } else {
-
-        alert("An unexpected error occurred.");
+        alert('An unexpected error occurred.');
       }
     }
   };

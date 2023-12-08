@@ -1,7 +1,7 @@
-import Contacts from "./Footer/Contacts";
-import Copyright from "./Footer/Copyright";
-import Links from "./Footer/Links";
-import LogoAndSocialMedia from "./Footer/LogoAndSocialMedia";
+import Contacts from './Footer/Contacts';
+import Copyright from './Footer/Copyright';
+import Links from './Footer/Links';
+import LogoAndSocialMedia from './Footer/LogoAndSocialMedia';
 
 export default function Footer() {
   return (

@@ -1,17 +1,16 @@
-
-import React, { useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    email: "",
-    name: "",
-    password: "",
-    phone_number: "",
-    address: "",
-    image_url: "",
+    email: '',
+    name: '',
+    password: '',
+    phone_number: '',
+    address: '',
+    image_url: '',
   });
   const router = useRouter();
 
@@ -19,14 +18,14 @@ const Register = () => {
     event.preventDefault();
     try {
       const response = await axios.post(
-        "https://alfred-server.up.railway.app/client/register",
-        formData
+        'https://alfred-server.up.railway.app/client/register',
+        formData,
       );
-      console.log("Response:", response.data);
-      router.push("/client-login");
+      console.log('Response:', response.data);
+      router.push('/client-login');
     } catch (error) {
-      console.error("Error:", error);
-      alert("Registration failed. Please try again.");
+      console.error('Error:', error);
+      alert('Registration failed. Please try again.');
     }
   };
 
@@ -37,10 +36,13 @@ const Register = () => {
     <div className="container mx-auto p-4">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Client Register</h1>
+          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">
+            Client Register
+          </h1>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Email
           </label>
           <input
@@ -56,7 +58,8 @@ const Register = () => {
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Name
           </label>
           <input
@@ -72,7 +75,8 @@ const Register = () => {
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Password
           </label>
           <input
@@ -88,7 +92,8 @@ const Register = () => {
         <div>
           <label
             htmlFor="phone_number"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Phone Number
           </label>
           <input
@@ -104,7 +109,8 @@ const Register = () => {
         <div>
           <label
             htmlFor="address"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Address
           </label>
           <input
@@ -120,7 +126,8 @@ const Register = () => {
         <div>
           <label
             htmlFor="image_url"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-sm font-medium text-gray-700"
+          >
             Image URL
           </label>
           <input
@@ -135,13 +142,16 @@ const Register = () => {
         <div>
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
             Register
           </button>
         </div>
         <div className="text-center">
-        <Link href="/talent-register" legacyBehavior>
-            <a className="text-indigo-600 hover:text-indigo-800">Kamu mau jadi talent? Daftar di sini</a>
+          <Link href="/talent-register" legacyBehavior>
+            <a className="text-indigo-600 hover:text-indigo-800">
+              Kamu mau jadi talent? Daftar di sini
+            </a>
           </Link>
         </div>
       </form>

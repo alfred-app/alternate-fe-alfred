@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const LamarJobPage: React.FC = () => {
-  const [priceOnBid, setPriceOnBid] = useState("");
+  const [priceOnBid, setPriceOnBid] = useState('');
   const router = useRouter();
-  const { id: jobId } = router.query; 
+  const { id: jobId } = router.query;
 
   const submitBid = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const token = localStorage.getItem("token");
-    const talentID = localStorage.getItem("userId"); 
+    const token = localStorage.getItem('token');
+    const talentID = localStorage.getItem('userId');
 
     if (!token || !talentID) {
-      alert("You must be logged in to submit a bid.");
+      alert('You must be logged in to submit a bid.');
       return;
     }
 
@@ -21,27 +21,26 @@ const LamarJobPage: React.FC = () => {
       const response = await fetch(
         `https://alfred-server.up.railway.app/bidlist/create/${jobId}`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             talentID: talentID,
             priceOnBid: Number(priceOnBid),
           }),
-        }
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Failed to submit bid");
+        throw new Error('Failed to submit bid');
       }
 
- 
       router.push(`/job-detail/${jobId}`);
     } catch (error) {
-      console.error("Error submitting bid:", error);
-      alert("Error submitting bid. Please try again.");
+      console.error('Error submitting bid:', error);
+      alert('Error submitting bid. Please try again.');
     }
   };
 
@@ -52,7 +51,8 @@ const LamarJobPage: React.FC = () => {
         <div className="mb-4">
           <label
             htmlFor="priceOnBid"
-            className="block text-gray-700 text-sm font-bold mb-2">
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
             Your Bid Price
           </label>
           <input
@@ -66,7 +66,8 @@ const LamarJobPage: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
           Submit Bid
         </button>
       </form>

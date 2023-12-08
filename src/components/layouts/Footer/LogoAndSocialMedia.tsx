@@ -8,7 +8,7 @@ export default function LogoAndSocialMedia() {
         consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
         et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
       </p>
-      
+
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-full bg-[#3CB5DB]"></div>
         <div className="w-12 h-12 rounded-full bg-[#3CB5DB]"></div>

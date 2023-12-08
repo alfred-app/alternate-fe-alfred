@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export default function Links() {
   return (
@@ -7,10 +7,10 @@ export default function Links() {
         <span className="text-2xl font-semibold">Links</span>
 
         <div className="flex flex-col gap-3">
-          <Link href={"/"} className="py-2 font-light">
+          <Link href={'/'} className="py-2 font-light">
             Beranda
           </Link>
-          <Link href={"/dashboard"} className="py-2 font-light">
+          <Link href={'/dashboard'} className="py-2 font-light">
             Explore
           </Link>
         </div>

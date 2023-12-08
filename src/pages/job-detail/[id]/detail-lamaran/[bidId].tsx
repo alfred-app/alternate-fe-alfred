@@ -1,7 +1,5 @@
-
-
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 interface BidDetail {
   id: string;
@@ -19,12 +17,12 @@ const DetailLamaranPage: React.FC = () => {
 
   useEffect(() => {
     const fetchBidDetail = async () => {
-      if (!bidId) return; 
+      if (!bidId) return;
 
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        alert("No token found. Redirecting to login...");
-        router.push("/login");
+        alert('No token found. Redirecting to login...');
+        router.push('/login');
         return;
       }
 
@@ -35,18 +33,18 @@ const DetailLamaranPage: React.FC = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch bid detail");
+          throw new Error('Failed to fetch bid detail');
         }
 
         const bidData: BidDetail = await response.json();
-        console.log(bidData); 
+        console.log(bidData);
         setBidDetail(bidData);
       } catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error);
       }
 
       setIsLoading(false);
@@ -62,7 +60,6 @@ const DetailLamaranPage: React.FC = () => {
   if (!bidDetail) {
     return <p>Detail lamaran tidak ditemukan.</p>;
   }
-
 
   return (
     <div className="container mx-auto p-4">

@@ -1,6 +1,5 @@
-
-import React from "react";
-import { useRouter } from "next/router";
+import React from 'react';
+import { useRouter } from 'next/router';
 
 interface CardProps {
   id: string;
@@ -20,7 +19,8 @@ const BidCard: React.FC<CardProps> = ({
   return (
     <div
       className="border rounded shadow-lg p-4 mb-4 cursor-pointer"
-      onClick={onClick}>
+      onClick={onClick}
+    >
       <p>
         <strong>Talent ID:</strong> {talentID}
       </p>

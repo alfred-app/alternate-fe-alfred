@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import JobCard from "../components/JobCard";
-import Button from "../components/Button";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import JobCard from '../components/JobCard';
+import Button from '../components/Button';
 
 interface Job {
   clientID: string;
@@ -19,15 +19,15 @@ const DashboardPage = () => {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          "https://alfred-server.up.railway.app/job/all"
+          'https://alfred-server.up.railway.app/job/all',
         );
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error('Network response was not ok');
         }
         const data = await response.json();
         setJobs(data);
       } catch (error) {
-        console.error("Error fetching jobs:", error);
+        console.error('Error fetching jobs:', error);
       }
       setIsLoading(false);
     };
@@ -36,7 +36,7 @@ const DashboardPage = () => {
   }, []);
 
   const handleAddJobClick = () => {
-    router.push("/tambah-pekerjaan");
+    router.push('/tambah-pekerjaan');
   };
 
   return (

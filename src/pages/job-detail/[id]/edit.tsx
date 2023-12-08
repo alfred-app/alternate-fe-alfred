@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const EditJobPage: React.FC = () => {
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState('');
   const router = useRouter();
   const { id } = router.query;
 
   useEffect(() => {
     const fetchJobDetail = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        alert("You are not authorized to view this page.");
-        router.push("/login");
+        alert('You are not authorized to view this page.');
+        router.push('/login');
         return;
       }
 
@@ -22,18 +22,18 @@ const EditJobPage: React.FC = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch job details");
+          throw new Error('Failed to fetch job details');
         }
 
         const jobData = await response.json();
-        setDescription(jobData.descriptions); 
+        setDescription(jobData.descriptions);
       } catch (error) {
-        console.error("Error fetching job details:", error);
-        alert("Error fetching job details.");
+        console.error('Error fetching job details:', error);
+        alert('Error fetching job details.');
       }
     };
 
@@ -43,40 +43,44 @@ const EditJobPage: React.FC = () => {
   }, [id, router]);
 
   const handleFormSubmit = async (event: React.FormEvent) => {
-   event.preventDefault();
- 
-   const token = localStorage.getItem('token');
-   if (!token) {
-     alert('You are not authorized to edit this job.');
-     return;
-   }
- 
-   try {
-     const response = await fetch(`https://alfred-server.up.railway.app/job/${id}`, {
-       method: 'PATCH',
-       headers: {
-         'Content-Type': 'application/json',
-         'Authorization': `Bearer ${token}`,
-       },
-       body: JSON.stringify({
-         descriptions: description,
-       }),
-     });
- 
-     if (!response.ok) {
-       const errorResponse = await response.text(); 
-       console.error('Error response:', errorResponse);
-       throw new Error(`Failed to update job: ${response.status} ${response.statusText}`);
-     }
- 
-     alert('Job updated successfully');
-     router.push(`/job-detail/${id}`);
-   } catch (error:any) {
-     console.error('Error updating job:', error);
-     alert(`Error updating job. Please try again. ${error.message}`);
-   }
- };
- 
+    event.preventDefault();
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You are not authorized to edit this job.');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://alfred-server.up.railway.app/job/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            descriptions: description,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorResponse = await response.text();
+        console.error('Error response:', errorResponse);
+        throw new Error(
+          `Failed to update job: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      alert('Job updated successfully');
+      router.push(`/job-detail/${id}`);
+    } catch (error: any) {
+      console.error('Error updating job:', error);
+      alert(`Error updating job. Please try again. ${error.message}`);
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -87,7 +91,8 @@ const EditJobPage: React.FC = () => {
         <div className="mb-4">
           <label
             htmlFor="description"
-            className="block text-gray-700 text-sm font-bold mb-2">
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
             Job Description
           </label>
           <textarea
@@ -100,7 +105,8 @@ const EditJobPage: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
           Update Job
         </button>
       </form>

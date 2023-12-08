@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export default function SearchBarAndAuth() {
   return (
@@ -13,12 +13,15 @@ export default function SearchBarAndAuth() {
         />
       </div>
 
-      <Link href={"/client-login"} className="px-5 py-3 rounded-full bg-[#F0EEFF]">
+      <Link
+        href={'/client-login'}
+        className="px-5 py-3 rounded-full bg-[#F0EEFF]"
+      >
         Log In
       </Link>
 
       <Link
-        href={"/client-register"}
+        href={'/client-register'}
         className="px-5 py-3 rounded-full bg-[#5F4BDB] text-white"
       >
         Sign Up

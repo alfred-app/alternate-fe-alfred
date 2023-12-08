@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import RoleButton from "../../../components/RoleButton";
-import BidCard from "../../../components/BidCard";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import RoleButton from '../../../components/RoleButton';
+import BidCard from '../../../components/BidCard';
 
 interface Job {
   id: string;
@@ -13,7 +13,7 @@ interface Job {
 }
 
 interface Bid {
-  id: string; 
+  id: string;
   talentID: string;
   priceOnBid: number;
   jobID: string;
@@ -30,14 +30,14 @@ const JobDetailPage: React.FC = () => {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
   useEffect(() => {
-    const userRole = localStorage.getItem("role");
+    const userRole = localStorage.getItem('role');
     setRole(userRole);
 
     const fetchJobDetail = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        alert("No token found. Redirecting to login...");
-        router.push("/login");
+        alert('No token found. Redirecting to login...');
+        router.push('/login');
         return;
       }
 
@@ -48,26 +48,26 @@ const JobDetailPage: React.FC = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch job detail");
+          throw new Error('Failed to fetch job detail');
         }
 
         const data = await response.json();
         setJob(data);
       } catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error);
       }
 
       setIsLoading(false);
     };
 
     const fetchBids = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        console.log("No token found");
+        console.log('No token found');
         return;
       }
 
@@ -78,24 +78,24 @@ const JobDetailPage: React.FC = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch bids");
+          throw new Error('Failed to fetch bids');
         }
 
         const bidsData = await response.json();
         setBids(bidsData);
       } catch (error) {
-        console.error("Error fetching bids:", error);
+        console.error('Error fetching bids:', error);
       }
     };
 
     const getCurrentLocation = (): Promise<GeolocationPosition> => {
       return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
-          reject(new Error("Geolocation is not supported by your browser"));
+          reject(new Error('Geolocation is not supported by your browser'));
         } else {
           navigator.geolocation.getCurrentPosition(resolve, reject);
         }
@@ -103,7 +103,7 @@ const JobDetailPage: React.FC = () => {
     };
 
     const calculateDistance = async () => {
-      if (!job || !job.address || role !== "talent") {
+      if (!job || !job.address || role !== 'talent') {
         return;
       }
 
@@ -112,14 +112,14 @@ const JobDetailPage: React.FC = () => {
         const { latitude: currentLat, longitude: currentLng } = position.coords;
 
         const geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          job.address
+          job.address,
         )}.json?access_token=${mapboxToken}`;
         const geocodingResponse = await fetch(geocodingUrl);
         const geocodingData = await geocodingResponse.json();
 
         const coordinates = geocodingData.features[0]?.geometry?.coordinates;
         if (!coordinates || coordinates.length !== 2) {
-          throw new Error("Job coordinates not found");
+          throw new Error('Job coordinates not found');
         }
 
         const [jobLng, jobLat] = coordinates;
@@ -131,7 +131,7 @@ const JobDetailPage: React.FC = () => {
         const routeDistance = directionsData.routes[0].distance / 1000; // Convert from meters to kilometers
         setDistance(`${routeDistance.toFixed(2)} km`);
       } catch (error) {
-        console.error("Error calculating distance:", error);
+        console.error('Error calculating distance:', error);
         setDistance(null); // Reset the distance in case of error
       }
     };
@@ -139,27 +139,25 @@ const JobDetailPage: React.FC = () => {
     if (id) {
       fetchJobDetail();
       fetchBids();
-      if (role === "talent") {
+      if (role === 'talent') {
         calculateDistance();
       }
     }
   }, [id, job, role, mapboxToken, router]);
 
   const handleBidCardClick = (bidId: string) => {
- 
     router.push(`/job-detail/${id}/detail-lamaran/${bidId}`);
   };
-  
 
   const renderBids = () => {
     return bids.map((bid) => (
       <BidCard
-        key={bid.id} 
-        id={bid.id} 
+        key={bid.id}
+        id={bid.id}
         talentID={bid.talentID}
         priceOnBid={bid.priceOnBid}
         jobID={bid.jobID}
-        onClick={() => handleBidCardClick(bid.id)} 
+        onClick={() => handleBidCardClick(bid.id)}
       />
     ));
   };
@@ -178,7 +176,7 @@ const JobDetailPage: React.FC = () => {
       <p>{job.descriptions}</p>
       <p>Address: {job.address}</p>
       <p>Client ID: {job.clientID}</p>
-      {role === "talent" && distance && (
+      {role === 'talent' && distance && (
         <p className="text-blue-600 text-m">Estimated Distance: {distance}</p>
       )}
       {role && <RoleButton role={role} jobId={job.id} />}

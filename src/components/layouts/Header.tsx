@@ -1,7 +1,7 @@
-"use client";
-import LogoAndLinks from "./Header/LogoAndLinks";
-import SearchBarAndAuth from "./Header/SearchBarAndAuth";
-import MobileNavMenu from "./Header/MobileNavMenu";
+'use client';
+import LogoAndLinks from './Header/LogoAndLinks';
+import SearchBarAndAuth from './Header/SearchBarAndAuth';
+import MobileNavMenu from './Header/MobileNavMenu';
 
 export default function Header() {
   return (
