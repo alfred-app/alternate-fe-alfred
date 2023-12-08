@@ -41,7 +41,6 @@ const DetailLamaranPage: React.FC = () => {
         }
 
         const bidData: BidDetail = await response.json();
-        console.log(bidData);
         setBidDetail(bidData);
       } catch (error) {
         console.error('Error:', error);
@@ -52,6 +51,43 @@ const DetailLamaranPage: React.FC = () => {
 
     fetchBidDetail();
   }, [bidId, router]);
+
+  const acceptBid = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('No token found. Redirecting to login...');
+      router.push('/login');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        'https://alfred-server.up.railway.app/job/set-talent',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            jobID: bidDetail?.jobID,
+            talentID: bidDetail?.talentID,
+            fixedPrice: bidDetail?.priceOnBid,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to accept the bid');
+      }
+
+      // Redirect to job detail page on success
+      router.push(`/job-detail/${bidDetail?.jobID}`);
+    } catch (error) {
+      console.error('Error:', error);
+      // Handle error (show error message to the user)
+    }
+  };
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -79,6 +115,13 @@ const DetailLamaranPage: React.FC = () => {
       <p>
         <strong>Bid Placed:</strong> {bidDetail.bidPlaced}
       </p>
+
+      <button
+        onClick={acceptBid}
+        className="btn-accept bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Accept Lamaran
+      </button>
     </div>
   );
 };

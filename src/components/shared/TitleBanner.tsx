@@ -1,5 +1,5 @@
-"use client";
-import { useRouter } from "next/navigation";
+'use client';
+import { useRouter } from 'next/navigation';
 
 export default function TitleBanner({ title }: { title: string }) {
   const router = useRouter();
@@ -11,7 +11,7 @@ export default function TitleBanner({ title }: { title: string }) {
           onClick={() => router.back()}
           className="absolute top-7 w-12 h-12 rounded-full text-4xl bg-white font-light md:left-7"
         >
-          {"<"}
+          {'<'}
         </button>
         <h1 className="font-semibold text-center text-2xl -translate-y-12 text-white sm:text-3xl">
           {title}

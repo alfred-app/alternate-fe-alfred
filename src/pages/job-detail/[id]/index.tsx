@@ -6,6 +6,7 @@ import BidCard from '../../../components/BidCard';
 interface Job {
   id: string;
   clientID: string;
+  talentID?: string;
   name: string;
   descriptions: string;
   address: string;
@@ -176,6 +177,9 @@ const JobDetailPage: React.FC = () => {
       <p>{job.descriptions}</p>
       <p>Address: {job.address}</p>
       <p>Client ID: {job.clientID}</p>
+      <p>
+        Talent ID: {job?.talentID ? job.talentID : 'belum ada talent terpilih'}
+      </p>
       {role === 'talent' && distance && (
         <p className="text-blue-600 text-m">Estimated Distance: {distance}</p>
       )}
