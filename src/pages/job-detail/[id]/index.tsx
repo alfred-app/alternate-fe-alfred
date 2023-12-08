@@ -26,7 +26,7 @@ const JobDetailPage: React.FC = () => {
   const [distance, setDistance] = useState<string | null>(null);
   const router = useRouter();
   const { id } = router.query;
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN; 
+  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
   useEffect(() => {
     const userRole = localStorage.getItem("role");
@@ -144,6 +144,10 @@ const JobDetailPage: React.FC = () => {
     }
   }, [id, job, role, mapboxToken, router]);
 
+  const handleBidCardClick = (jobID: string) => {
+    router.push(`/job-detail/${jobID}/detail-lamaran`);
+  };
+
   const renderBids = () => {
     return bids.map((bid, index) => (
       <BidCard
@@ -151,6 +155,7 @@ const JobDetailPage: React.FC = () => {
         talentID={bid.talentID}
         priceOnBid={bid.priceOnBid}
         jobID={bid.jobID}
+        onClick={() => handleBidCardClick(bid.jobID)} 
       />
     ));
   };
