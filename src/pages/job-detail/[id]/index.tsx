@@ -13,6 +13,7 @@ interface Job {
 }
 
 interface Bid {
+  id: string; 
   talentID: string;
   priceOnBid: number;
   jobID: string;
@@ -144,18 +145,21 @@ const JobDetailPage: React.FC = () => {
     }
   }, [id, job, role, mapboxToken, router]);
 
-  const handleBidCardClick = (jobID: string) => {
-    router.push(`/job-detail/${jobID}/detail-lamaran`);
+  const handleBidCardClick = (bidId: string) => {
+ 
+    router.push(`/job-detail/${id}/detail-lamaran/${bidId}`);
   };
+  
 
   const renderBids = () => {
-    return bids.map((bid, index) => (
+    return bids.map((bid) => (
       <BidCard
-        key={index}
+        key={bid.id} 
+        id={bid.id} 
         talentID={bid.talentID}
         priceOnBid={bid.priceOnBid}
         jobID={bid.jobID}
-        onClick={() => handleBidCardClick(bid.jobID)} 
+        onClick={() => handleBidCardClick(bid.id)} 
       />
     ));
   };

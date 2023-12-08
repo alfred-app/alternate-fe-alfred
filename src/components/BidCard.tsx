@@ -1,15 +1,17 @@
-// src/components/BidCard.tsx
+
 import React from "react";
 import { useRouter } from "next/router";
 
 interface CardProps {
+  id: string;
   talentID: string;
   priceOnBid: number;
   jobID: string;
-  onClick: () => void; 
+  onClick: () => void;
 }
 
 const BidCard: React.FC<CardProps> = ({
+  id,
   talentID,
   priceOnBid,
   jobID,

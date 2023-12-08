@@ -1,6 +1,7 @@
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 interface BidDetail {
   id: string;
@@ -14,11 +15,11 @@ const DetailLamaranPage: React.FC = () => {
   const [bidDetail, setBidDetail] = useState<BidDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const { id } = router.query; 
+  const { bidId } = router.query;
 
   useEffect(() => {
     const fetchBidDetail = async () => {
-      if (!id) return; 
+      if (!bidId) return; 
 
       const token = localStorage.getItem("token");
       if (!token) {
@@ -29,7 +30,7 @@ const DetailLamaranPage: React.FC = () => {
 
       try {
         const response = await fetch(
-          `https://alfred-server.up.railway.app/bidlist/${id}`,
+          `https://alfred-server.up.railway.app/bidlist/${bidId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -41,7 +42,8 @@ const DetailLamaranPage: React.FC = () => {
           throw new Error("Failed to fetch bid detail");
         }
 
-        const bidData = await response.json();
+        const bidData: BidDetail = await response.json();
+        console.log(bidData); 
         setBidDetail(bidData);
       } catch (error) {
         console.error("Error:", error);
@@ -51,7 +53,7 @@ const DetailLamaranPage: React.FC = () => {
     };
 
     fetchBidDetail();
-  }, [id, router]);
+  }, [bidId, router]);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -61,14 +63,25 @@ const DetailLamaranPage: React.FC = () => {
     return <p>Detail lamaran tidak ditemukan.</p>;
   }
 
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Detail Lamaran</h1>
-      <p><strong>Bid ID:</strong> {bidDetail.id}</p>
-      <p><strong>Talent ID:</strong> {bidDetail.talentID}</p>
-      <p><strong>Job ID:</strong> {bidDetail.jobID}</p>
-      <p><strong>Price on Bid:</strong> {bidDetail.priceOnBid}</p>
-      <p><strong>Bid Placed:</strong> {bidDetail.bidPlaced}</p>
+      <p>
+        <strong>Bid ID:</strong> {bidDetail.id}
+      </p>
+      <p>
+        <strong>Talent ID:</strong> {bidDetail.talentID}
+      </p>
+      <p>
+        <strong>Job ID:</strong> {bidDetail.jobID}
+      </p>
+      <p>
+        <strong>Price on Bid:</strong> {bidDetail.priceOnBid}
+      </p>
+      <p>
+        <strong>Bid Placed:</strong> {bidDetail.bidPlaced}
+      </p>
     </div>
   );
 };
