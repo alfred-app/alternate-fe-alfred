@@ -55,7 +55,7 @@ const EditJobPage: React.FC = () => {
      const response = await fetch(`https://alfred-server.up.railway.app/job/${id}`, {
        method: 'PATCH',
        headers: {
-         'Content-Type': 'text/plain',
+         'Content-Type': 'application/json',
          'Authorization': `Bearer ${token}`,
        },
        body: JSON.stringify({
