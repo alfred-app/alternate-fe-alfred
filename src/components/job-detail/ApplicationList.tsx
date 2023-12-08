@@ -33,10 +33,10 @@ export default function ApplicationList() {
       <div className="w-full max-w-7xl p-5 flex flex-col items-center justify-between gap-5 sm:flex-row">
         <span className="text-xl text-center font-semibold sm:text-2xl">
           {isLoading
-            ? 'Menghitung jumlah bid...'
+            ? 'Menghitung jumlah lamaran...'
             : !data
-              ? 'Tidak ada bid'
-              : `Terdapat ${data.length} Bid`}
+              ? 'Tidak ada lamaran'
+              : `Terdapat ${data.length} Lamaran`}
         </span>
 
         {/* <form className="flex flex-col items-start gap-3">

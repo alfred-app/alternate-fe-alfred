@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import AcceptApplicationForm from '@/components/job-detail/detail-lamaran/AcceptApplicationForm';
+import JobDetailsApplicationCard from '@/components/job-detail/detail-lamaran/JobDetailsApplicationCard';
+import TitleBanner from '@/components/shared/TitleBanner';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import useSWR from 'swr';
+import LoadingCard from '@/components/shared/LoadingCard';
+import TalentDetailsCard from '@/components/job-detail/detail-lamaran/TalentDetailsCard';
 
 interface BidDetail {
   id: string;
@@ -10,75 +16,47 @@ interface BidDetail {
 }
 
 const DetailLamaranPage: React.FC = () => {
-  const [bidDetail, setBidDetail] = useState<BidDetail | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { bidId } = router.query;
 
-  useEffect(() => {
-    const fetchBidDetail = async () => {
-      if (!bidId) return;
+  // SWR fetcher function
+  const fetcher = (url: string) =>
+    axios
+      .get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((data) => {
+        return data.data;
+      })
+      .catch((error) => console.log('Error Fetching Data'));
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('No token found. Redirecting to login...');
-        router.push('/login');
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `https://alfred-server.up.railway.app/bidlist/${bidId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch bid detail');
-        }
-
-        const bidData: BidDetail = await response.json();
-        console.log(bidData);
-        setBidDetail(bidData);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchBidDetail();
-  }, [bidId, router]);
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (!bidDetail) {
-    return <p>Detail lamaran tidak ditemukan.</p>;
-  }
+  // Fetch bidlist
+  const { data, isLoading } = useSWR(
+    typeof window == 'undefined'
+      ? null
+      : `https://alfred-server.up.railway.app/bidlist/${bidId}`,
+    fetcher,
+  );
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Detail Lamaran</h1>
-      <p>
-        <strong>Bid ID:</strong> {bidDetail.id}
-      </p>
-      <p>
-        <strong>Talent ID:</strong> {bidDetail.talentID}
-      </p>
-      <p>
-        <strong>Job ID:</strong> {bidDetail.jobID}
-      </p>
-      <p>
-        <strong>Price on Bid:</strong> {bidDetail.priceOnBid}
-      </p>
-      <p>
-        <strong>Bid Placed:</strong> {bidDetail.bidPlaced}
-      </p>
+    <div className="w-full flex flex-col items-center justify-center gap-3 font-poppins">
+      <TitleBanner title="Detail Lamaran" />
+
+      <div className="w-full flex flex-col items-center justify-center gap-8 px-3 sm:px-8">
+        {typeof window == 'undefined' || isLoading ? (
+          <LoadingCard />
+        ) : (
+          <>
+            <JobDetailsApplicationCard jobID={data.jobID} />
+            <div className="h-11 w-1 rounded-full -translate-y-32 bg-[#5F4BDB]"></div>
+            <TalentDetailsCard talentID={data.talentID} />
+            <AcceptApplicationForm bidData={data} />
+          </>
+        )}
+      </div>
     </div>
   );
 };
