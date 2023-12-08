@@ -1,188 +1,60 @@
-import React, { useEffect, useState } from 'react';
+'use client';
+import ApplicationList from '@/components/job-detail/ApplicationList';
+import ClientProfile from '@/components/job-detail/ClientProfile';
+import JobDescription from '@/components/job-detail/JobDescription';
+import SkeletonClientProfile from '@/components/job-detail/SkeletonClientProfile';
+import SkeletonJobDescription from '@/components/job-detail/SkeletonJobDescription';
+import LoadingCard from '@/components/shared/LoadingCard';
+import TitleBanner from '@/components/shared/TitleBanner';
+import axios from 'axios';
 import { useRouter } from 'next/router';
-import RoleButton from '../../../components/RoleButton';
-import BidCard from '../../../components/BidCard';
-
-interface Job {
-  id: string;
-  clientID: string;
-  name: string;
-  descriptions: string;
-  address: string;
-  imageURL: string;
-}
-
-interface Bid {
-  id: string;
-  talentID: string;
-  priceOnBid: number;
-  jobID: string;
-}
+import useSWR from 'swr';
 
 const JobDetailPage: React.FC = () => {
-  const [job, setJob] = useState<Job | null>(null);
-  const [bids, setBids] = useState<Bid[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [role, setRole] = useState<string | null>(null);
-  const [distance, setDistance] = useState<string | null>(null);
+  // Get current job id
   const router = useRouter();
   const { id } = router.query;
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
-  useEffect(() => {
-    const userRole = localStorage.getItem('role');
-    setRole(userRole);
+  // SWR fetcher function
+  const fetcher = (url: string) =>
+    axios
+      .get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((data) => {
+        return data.data;
+      })
+      .catch((error) => console.log('Error Fetching Data'));
 
-    const fetchJobDetail = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('No token found. Redirecting to login...');
-        router.push('/login');
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `https://alfred-server.up.railway.app/job/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch job detail');
-        }
-
-        const data = await response.json();
-        setJob(data);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-
-      setIsLoading(false);
-    };
-
-    const fetchBids = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.log('No token found');
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `https://alfred-server.up.railway.app/bidlist/job/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch bids');
-        }
-
-        const bidsData = await response.json();
-        setBids(bidsData);
-      } catch (error) {
-        console.error('Error fetching bids:', error);
-      }
-    };
-
-    const getCurrentLocation = (): Promise<GeolocationPosition> => {
-      return new Promise((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error('Geolocation is not supported by your browser'));
-        } else {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        }
-      });
-    };
-
-    const calculateDistance = async () => {
-      if (!job || !job.address || role !== 'talent') {
-        return;
-      }
-
-      try {
-        const position = await getCurrentLocation();
-        const { latitude: currentLat, longitude: currentLng } = position.coords;
-
-        const geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          job.address,
-        )}.json?access_token=${mapboxToken}`;
-        const geocodingResponse = await fetch(geocodingUrl);
-        const geocodingData = await geocodingResponse.json();
-
-        const coordinates = geocodingData.features[0]?.geometry?.coordinates;
-        if (!coordinates || coordinates.length !== 2) {
-          throw new Error('Job coordinates not found');
-        }
-
-        const [jobLng, jobLat] = coordinates;
-
-        const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${currentLng},${currentLat};${jobLng},${jobLat}?access_token=${mapboxToken}`;
-        const directionsResponse = await fetch(directionsUrl);
-        const directionsData = await directionsResponse.json();
-
-        const routeDistance = directionsData.routes[0].distance / 1000; // Convert from meters to kilometers
-        setDistance(`${routeDistance.toFixed(2)} km`);
-      } catch (error) {
-        console.error('Error calculating distance:', error);
-        setDistance(null); // Reset the distance in case of error
-      }
-    };
-
-    if (id) {
-      fetchJobDetail();
-      fetchBids();
-      if (role === 'talent') {
-        calculateDistance();
-      }
-    }
-  }, [id, job, role, mapboxToken, router]);
-
-  const handleBidCardClick = (bidId: string) => {
-    router.push(`/job-detail/${id}/detail-lamaran/${bidId}`);
-  };
-
-  const renderBids = () => {
-    return bids.map((bid) => (
-      <BidCard
-        key={bid.id}
-        id={bid.id}
-        talentID={bid.talentID}
-        priceOnBid={bid.priceOnBid}
-        jobID={bid.jobID}
-        onClick={() => handleBidCardClick(bid.id)}
-      />
-    ));
-  };
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (!job) {
-    return <p>Job not found or you do not have access to view this job.</p>;
-  }
+  // Fetch job by ID
+  const { data, isLoading } = useSWR(
+    `https://alfred-server.up.railway.app/job/${id}`,
+    fetcher,
+  );
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">{job.name}</h1>
-      <p>{job.descriptions}</p>
-      <p>Address: {job.address}</p>
-      <p>Client ID: {job.clientID}</p>
-      {role === 'talent' && distance && (
-        <p className="text-blue-600 text-m">Estimated Distance: {distance}</p>
-      )}
-      {role && <RoleButton role={role} jobId={job.id} />}
-      <div className="bids-container bg-white">
-        <h2 className="text-2xl font-bold my-4">Lamaran</h2>
-        {renderBids()}
+    <div className="w-full flex flex-col items-center justify-center gap-3 font-poppins">
+      <TitleBanner title="Detail Pekerjaan" />
+
+      <div className="w-full flex flex-col items-start justify-center gap-5 px-3 sm:px-8 md:flex-row">
+        {isLoading ? (
+          <>
+            <SkeletonClientProfile />
+            <SkeletonJobDescription />
+          </>
+        ) : (
+          <>
+            <ClientProfile clientID={data.clientID} />
+            <JobDescription data={data} />
+          </>
+        )}
+      </div>
+
+      <div className="w-full flex flex-col items-center justify-center px-3 -translate-y-12 sm:px-8">
+        {isLoading ? <LoadingCard /> : <ApplicationList />}
       </div>
     </div>
   );

@@ -106,7 +106,7 @@ export default function JobCard({ job }: JobCardType) {
         <div className="w-full flex justify-between gap-3 md:w-fit md:justify-start">
           <Link
             href={`/job-detail/${id}`}
-            className="px-5 py-3 rounded-full font-semibold text-[#FE6D1B] bg-[#FFE8DC]"
+            className="px-5 py-3 rounded-full font-semibold text-center text-[#FE6D1B] bg-[#FFE8DC]"
           >
             Lihat Detail
           </Link>
@@ -114,9 +114,9 @@ export default function JobCard({ job }: JobCardType) {
           {currentRole === 'talent' && (
             <Link
               href={`/job-detail/${id}/lamar`}
-              className="px-5 py-3 rounded-full font-semibold text-[#5F4BDB] bg-[#F0EEFF]"
+              className="px-5 py-3 rounded-full font-semibold text-center text-[#5F4BDB] bg-[#F0EEFF]"
             >
-              Lamar
+              Taruh Bid
             </Link>
           )}
         </div>
